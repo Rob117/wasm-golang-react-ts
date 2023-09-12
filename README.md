@@ -1,46 +1,33 @@
-# Getting Started with Create React App
+# What is this
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Run Go code, using web assembly, in a React app that uses typescript. This is the minimum proof of concept that I could get working.
 
-## Available Scripts
+## Positives
 
-In the project directory, you can run:
+You can run go code. That's pretty cool, and lets you port your go applications really easily using the web.
 
-### `npm start`
+You can call that Go code from Javascript.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+You can do things to JS from Go Code. [Small example of an alert](https://stackoverflow.com/a/69974936/4982995)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Negatives
 
-### `npm test`
+When you are done using a function and it will never be called again, you have to call Func.Release or the memory won't be freed up
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Funcs can deadlock really easily, apparently - [See this](https://pkg.go.dev/syscall/js#FuncOf)
 
-### `npm run build`
+The LoadWasm component and wasm_exec.js is just a huge bundle of boilerplate
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Type safety in Go when crossing the JS bridge is _annihilated_. Go can't ensure anything about what is coming across that bridge, so the only args that can be used when defining bridge functions are `[]js.Value`. There are a lot of methods on js.Value (`.IsNumber`, `IsUndefined`, etc.) to help you with this, but there is going to be a lot of conversion on your part.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The best way to handle this seems to just be minimizing what you pass back-and-forth between go and js, for the most part. This should be entirely possible - if you've worked with React Native and native modules, it should be a similar feeling.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Threads don't seem to really exist in the go implementation? Based on https://github.com/golang/go/issues/28631 and https://news.ycombinator.com/item?id=30357078, it might be doable, but I really don't know.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Acknowledgements
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Created while reading the following:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+https://dev.to/royhadad/how-to-create-a-react-app-with-go-support-using-webassembly-in-under-60-seconds-4oa3
+https://xebia.com/blog/golang-webassembly/
