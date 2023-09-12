@@ -2,6 +2,11 @@
 
 Run Go code, using web assembly, in a React app that uses typescript. This is the minimum proof of concept that I could get working.
 
+## How do I use this
+
+`yarn build`
+`yarn start`
+
 ## Positives
 
 You can run go code. That's pretty cool, and lets you port your go applications really easily using the web.
