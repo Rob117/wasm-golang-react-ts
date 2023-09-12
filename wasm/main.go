@@ -1,3 +1,6 @@
+// Note for Golang users: edit settings -> change build and arch to the following for type safety
+//go:build js && wasm
+
 package main
 
 import (
