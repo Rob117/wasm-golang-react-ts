@@ -7,9 +7,9 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
+        <button onClick={() => { alert(window.myGolangFunction(2, 3)); }}>
+          Click here to invoke WebAssembly!
+        </button>
         <a
           className="App-link"
           href="https://reactjs.org"
